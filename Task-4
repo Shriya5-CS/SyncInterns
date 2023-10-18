@@ -1,0 +1,120 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+class User {
+    private String username;
+    private String password;
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+}
+
+class Train {
+    private String trainName;
+    private int availableSeats;
+
+    public Train(String trainName, int availableSeats) {
+        this.trainName = trainName;
+        this.availableSeats = availableSeats;
+    }
+
+    public String getTrainName() {
+        return trainName;
+    }
+
+    public int getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public void bookSeats(int numSeats) {
+        if (numSeats <= availableSeats) {
+            availableSeats -= numSeats;
+            System.out.println("Seats booked successfully for " + trainName);
+        } else {
+            System.out.println("Not enough seats available for " + trainName);
+        }
+    }
+}
+
+public class TrainTicketingSystem {
+    private static Map<String, User> users = new HashMap<>();
+    private static Map<String, Train> trains = new HashMap<>();
+    private static Scanner scanner = new Scanner(System.in);
+    private static User currentUser;
+
+    public static void main(String[] args) {
+        initializeData();
+        login();
+
+        if (currentUser != null) {
+            displayAvailableTrains();
+            bookTicket();
+        }
+
+        scanner.close();
+    }
+
+    private static void initializeData() {
+        // Dummy data for users
+        users.put("Parthu", new User("user1", "******"));
+        users.put("Prince", new User("user2", "******"));
+
+        // Dummy data for trains
+        trains.put("16591", new Train("Hampi Express(16591)", 50));
+        trains.put("11301", new Train("Udyan Express(11301)", 30));
+        trains.put("18463", new Train("Prasanti Express(18463)", 20));
+    }
+
+    private static void login() {
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        User user = users.get(username);
+
+        if (user != null && user.getPassword().equals(password)) {
+            System.out.println("Login successful!");
+            currentUser = user;
+        } else {
+            System.out.println("Invalid username or password. RETRY...!!");
+            System.exit(0);
+        }
+    }
+
+    private static void displayAvailableTrains() {
+        System.out.println("Available Trains:");
+        for (Train train : trains.values()) {
+            System.out.println(train.getTrainName() + " - Available Seats: " + train.getAvailableSeats());
+        }
+    }
+
+    private static void bookTicket() {
+        System.out.print("Enter the train Number to book a ticket: ");
+        String trainName = scanner.nextLine();
+
+        Train selectedTrain = trains.get(trainName);
+
+        if (selectedTrain != null) {
+            System.out.print("Enter the number of seats to book: ");
+            int numSeats = scanner.nextInt();
+
+            selectedTrain.bookSeats(numSeats);
+        } else {
+            System.out.println("Invalid train name. Exiting.");
+        }
+        System.out.println("\tThank You....!!! for Booking\n \t\tHappy Journey");
+    }
+    
+}
